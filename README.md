@@ -1,96 +1,450 @@
-# QuickStay — Hotel Booking (MERN)
+# QuickStay – Full-Stack Hotel Booking Platform
 
-Full-stack hotel booking app: React (Vite) frontend + Express/MongoDB backend,
-with Clerk for authentication.
+> A modern, production-ready hotel booking platform built with the **MERN Stack**, featuring secure authentication with **Clerk**, role-based access control, real-time booking management, and a dedicated dashboard for hotel owners.
+
+---
+
+## 📖 Overview
+
+**QuickStay** is a comprehensive hotel reservation platform designed for both **Guests** and **Hotel Owners**.
+
+The application follows a modern **RESTful Client-Server Architecture**, where a React frontend communicates with a secure Express backend. Authentication is handled through **Clerk**, while MongoDB stores all application data including users, hotels, rooms, and bookings.
+
+The platform provides a seamless booking experience for guests while enabling hotel owners to efficiently manage their properties through a dedicated dashboard.
+
+---
+
+# ✨ Features
+
+## 👤 Guest Features
+
+- Browse available hotels and rooms
+- Secure authentication using Clerk
+- View detailed room information
+- Book rooms with date selection
+- View booking history
+- Responsive user interface
+- Real-time room availability
+
+---
+
+## 🏨 Hotel Owner Features
+
+- Dedicated Owner Dashboard
+- Register as a Hotel Owner
+- Add new hotels
+- Add and manage rooms
+- Upload room images
+- Track bookings
+- View dashboard statistics
+- Manage hotel inventory
+
+---
+
+## 🔒 Authentication & Security
+
+- Clerk Authentication Integration
+- JWT-based request verification
+- Protected API routes
+- Role-based authorization
+- Secure session management
+- Server-side booking validation
+- Secure local image uploads
+
+---
+
+## ⚙️ Booking Engine
+
+- Prevents double bookings
+- Date overlap validation
+- Automatic pricing calculation
+- Server-side price verification
+- Booking history management
+
+---
+
+## 🔄 Dynamic Data Management
+
+- React Context API
+- Live API integration
+- Loading states
+- Centralized state management
+- Real-time data fetching
+- Eliminated legacy dummy data
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+| Technology | Purpose |
+|------------|---------|
+| React.js | User Interface |
+| Vite | Fast Development & Build Tool |
+| React Context API | Global State Management |
+| Clerk React SDK | Authentication |
+| Axios | API Requests |
+| React Router DOM | Client-side Routing |
+
+---
+
+## Backend
+
+| Technology | Purpose |
+|------------|---------|
+| Node.js | Runtime Environment |
+| Express.js | REST API |
+| MongoDB | Database |
+| Mongoose | ODM |
+| Clerk Backend SDK | Token Verification |
+| Multer | Image Upload Handling |
+| JWT | Authentication |
+
+---
+
+## Database
+
+- MongoDB
+- Mongoose Models
+
+Collections include:
+
+- Users
+- Hotels
+- Rooms
+- Bookings
+
+---
+
+# 🏗 System Architecture
 
 ```
-project/
-├── client/     # your existing React frontend (now wired to the API)
-└── server/     # new Express + MongoDB backend
+                  +----------------------+
+                  |      React Client    |
+                  |       (Vite)         |
+                  +----------+-----------+
+                             |
+                    REST API Requests
+                             |
+                 Authorization: Bearer Token
+                             |
+                             ▼
+                 +--------------------------+
+                 |     Express Server       |
+                 |        Node.js           |
+                 +-----------+--------------+
+                             |
+            +----------------+----------------+
+            |                                 |
+            ▼                                 ▼
+     Clerk Authentication              MongoDB Database
+     (JWT Verification)         Users • Hotels • Rooms • Bookings
+                             |
+                             ▼
+                  Local File Storage
+                  (/server/uploads)
 ```
+
+---
+
+# 📂 Project Structure
+
+```
+QuickStay/
+│
+├── client/
+│   ├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── context/
+│   ├── assets/
+│   └── .env
+│
+├── server/
+│   ├── controllers/
+│   ├── routes/
+│   ├── middleware/
+│   ├── models/
+│   ├── uploads/
+│   ├── seed/
+│   └── .env
+│
+└── README.md
+```
+
+---
+
+# 🚀 Getting Started
 
 ## Prerequisites
 
-- Node.js 18+
-- A MongoDB instance (local `mongod`, or a free MongoDB Atlas cluster)
-- A Clerk application (free tier is fine) — https://dashboard.clerk.com
+Before running the project, make sure you have:
 
-## 1. Backend setup
+- Node.js (v18 or higher)
+- MongoDB (Local or Atlas)
+- Clerk Account
+- npm
 
-```bash
-cd server
-npm install
-cp .env.example .env
-```
+---
 
-Edit `server/.env`:
+# 🔑 Environment Variables
 
-```
-MONGODB_URI=mongodb://127.0.0.1:27017      # or your Atlas URI
+## Server (`server/.env`)
+
+| Variable | Description |
+|----------|-------------|
+| `MONGODB_URI` | MongoDB connection string |
+| `DB_NAME` | Database name |
+| `CLERK_SECRET_KEY` | Clerk Secret Key |
+| `CLERK_PUBLISHABLE_KEY` | Clerk Publishable Key |
+| `CLIENT_URL` | Frontend URL |
+
+Example:
+
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017
 DB_NAME=hotel-booking
-CLERK_SECRET_KEY=sk_test_...               # same Clerk project as the frontend
-CLERK_PUBLISHABLE_KEY=pk_test_...
+
+CLERK_SECRET_KEY=sk_test_xxxxxxxxx
+CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxxx
+
 CLIENT_URL=http://localhost:5173
 ```
 
-> **Important:** `CLERK_SECRET_KEY` must belong to the *same* Clerk application
-> as `VITE_CLERK_PUBLISHABLE_KEY` in `client/.env`, otherwise token
-> verification will always fail with 401s.
+---
 
-Seed the database with 20 hotels / ~50-60 rooms / demo users:
+## Client (`client/.env`)
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk Publishable Key |
+| `VITE_BACKEND_URL` | Backend API URL |
+
+Example:
+
+```env
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxxx
+VITE_BACKEND_URL=http://localhost:5000
+```
+
+---
+
+> **Important**
+>
+> Clerk authentication will return **401 Unauthorized** if the **Secret Key** and **Publishable Key** are not generated from the **same Clerk application**.
+
+---
+
+# ⚡ Installation
+
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/QuickStay.git
+
+cd QuickStay
+```
+
+---
+
+## 2️⃣ Backend Setup
+
+```bash
+cd server
+
+npm install
+```
+
+Create your environment file.
+
+```bash
+cp .env.example .env
+```
+
+Fill in all required environment variables.
+
+Seed the database:
 
 ```bash
 npm run seed
 ```
 
-Start the API:
+Start the backend server:
 
 ```bash
 npm run dev
 ```
 
-You should see:
-```
-MongoDB connected -> hotel-booking
-Server listening on http://localhost:5000
-```
+---
 
-## 2. Frontend setup
+## 3️⃣ Frontend Setup
+
+Open another terminal.
 
 ```bash
 cd client
+
 npm install
-```
 
-`client/.env` already has (added for you):
-```
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_...     # was already there
-VITE_BACKEND_URL=http://localhost:5000     # newly added
-```
-
-Start the dev server:
-
-```bash
 npm run dev
 ```
 
-Visit `http://localhost:5173`.
+---
 
-## 3. Try it out
+The application should now be running at:
 
-1. Browse hotels on the homepage / "Hotels" page — this data now comes from MongoDB via the seed script.
-2. Sign in with Clerk (top-right "Login").
-3. Click **List Your Hotel** in the navbar → fill out the form → you're now a hotel owner and land on `/owner`.
-4. Add a room with real uploaded images (**Add Room**) — files are stored under `server/uploads/rooms` and served at `http://localhost:5000/uploads/...`.
-5. Browse to `/rooms`, open a room, pick check-in/out dates, and book it.
-6. Check `/my-bookings` to see it, and `/owner` (Dashboard) to see it show up in the owner's stats.
+Frontend
 
-## What changed vs. the original frontend
+```
+http://localhost:5173
+```
 
-- All data that used to come from `src/assets/assets.js` (`hotelDummyData`, `roomsDummyData`, `userDummyData`, `userBookingsDummyData`, `dashboardDummyData`) is now fetched from the API through a new `src/context/AppContext.jsx`.
-- `assets.js` still exports icons, `cities` (used as a fallback in the destination datalist / hotel-registration city dropdown), `exclusiveOffers`, `testimonials`, `facilityIcons`, and `roomCommonData` — these are presentational/marketing content, not booking data, so they're left as-is.
-- Every page that previously read dummy arrays directly now has a loading state and calls the API: `Home` → `FeaturedDestination`, `AllRooms`, `RoomDetails`, `MyBookings`, `HotelReg`, and the owner pages `Dashboard`, `AddRoom`, `ListRoom`.
-- Booking price and date-overlap checks are computed **server-side** — the client sends `roomId`, dates, and guest count, and the server rejects overlapping bookings and computes `totalPrice` itself.
-- Auth: the frontend already used `@clerk/react`; the backend now verifies the same Clerk session token (`Authorization: Bearer <token>`) via `@clerk/backend`, and auto-creates/looks up a matching local `User` document.
+Backend
 
-See `server/README.md` for the full API reference.
+```
+http://localhost:5000
+```
+
+---
+
+# 👨‍💻 Usage
+
+## Guest Workflow
+
+1. Browse hotels from the homepage.
+2. Sign in using Clerk.
+3. Navigate to **Rooms**.
+4. Select check-in and check-out dates.
+5. Book a room.
+6. View booking history under **My Bookings**.
+
+---
+
+## Hotel Owner Workflow
+
+1. Login with Clerk.
+2. Click **List Your Hotel**.
+3. Complete owner registration.
+4. Access the **Owner Dashboard**.
+5. Add hotels and rooms.
+6. Upload room images.
+7. Track bookings and statistics.
+
+---
+
+# 📌 REST API Features
+
+- User Authentication
+- Hotel Management
+- Room Management
+- Booking Management
+- Owner Dashboard APIs
+- Image Upload APIs
+
+---
+
+# 🔥 Technical Highlights
+
+### API Migration
+
+Migrated completely from static dummy data (`assets.js`) to a fully functional Express API.
+
+### Optimized State Management
+
+- React Context API
+- Loading states
+- Centralized data fetching
+- Improved user experience
+
+### Booking Validation
+
+- Date overlap checks
+- Double-booking prevention
+- Server-side price calculation
+
+### Secure Image Uploads
+
+- Local filesystem storage
+- Multer integration
+- Secure file handling
+
+### Static Asset Optimization
+
+Static assets like:
+
+- Icons
+- Testimonials
+- Marketing content
+- City data
+
+remain isolated from database queries for improved performance.
+
+---
+
+# 🔒 Security
+
+- Clerk Authentication
+- JWT Verification
+- Protected Routes
+- Role-Based Authorization
+- Server-side Validation
+- Secure File Uploads
+- Price Manipulation Prevention
+
+---
+
+# 📈 Future Improvements
+
+- Online Payment Integration (Stripe/Razorpay)
+- Email Notifications
+- Hotel Reviews & Ratings
+- Wishlist Feature
+- Search & Filters
+- Google Maps Integration
+- Admin Dashboard
+- Cloud Image Storage (Cloudinary/S3)
+- Booking Cancellation & Refunds
+- Availability Calendar
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a new feature branch
+
+```bash
+git checkout -b feature/YourFeature
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Added new feature"
+```
+
+4. Push to GitHub
+
+```bash
+git push origin feature/YourFeature
+```
+
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+# 👨‍💻 Author
+
+**Anubhav**
+
+Full Stack Developer | MERN Stack | C++ | DSA
+
+---
+
+## ⭐ If you found this project useful, consider giving it a star!
